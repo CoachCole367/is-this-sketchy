@@ -6,20 +6,21 @@
   <title>Is this sketchy?</title>
   <style>
     :root {
-      --bg: #f4f7f2;
-      --panel: #ffffff;
-      --panel-alt: #eef3e8;
-      --text: #1f2a1f;
-      --muted: #5f6d5f;
-      --line: #d5dfd1;
-      --accent: #2f6f4f;
-      --accent-strong: #204d37;
-      --warning: #b06a00;
-      --danger: #a43c2e;
-      --danger-soft: #f7dfda;
-      --good: #2f6f4f;
-      --good-soft: #dff0e5;
-      --shadow: 0 18px 42px rgba(31, 42, 31, 0.08);
+      --bg: #04080d;
+      --panel: rgba(8, 15, 24, 0.88);
+      --panel-strong: rgba(6, 12, 20, 0.96);
+      --panel-soft: rgba(255, 255, 255, 0.04);
+      --text: #eff6ff;
+      --muted: #9bb0c8;
+      --line: rgba(151, 188, 226, 0.14);
+      --accent: #2e81bd;
+      --accent-strong: #8fd1ff;
+      --warning: #f3bb68;
+      --danger: #ff8c97;
+      --danger-soft: rgba(112, 29, 46, 0.32);
+      --good: #74d3a0;
+      --good-soft: rgba(22, 84, 57, 0.34);
+      --shadow: 0 36px 90px rgba(0, 0, 0, 0.48);
     }
 
     * {
@@ -30,109 +31,127 @@
       margin: 0;
       font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(47, 111, 79, 0.08), transparent 32%),
-        linear-gradient(180deg, #f7faf5 0%, var(--bg) 100%);
+        radial-gradient(circle at 50% 18%, rgba(52, 143, 212, 0.24), transparent 22%),
+        radial-gradient(circle at 50% 32%, rgba(14, 60, 97, 0.24), transparent 40%),
+        linear-gradient(180deg, #02060b 0%, #07101a 50%, #03070c 100%);
       color: var(--text);
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    .wrap {
-      max-width: 980px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015)),
+        repeating-linear-gradient(
+          180deg,
+          transparent 0,
+          transparent 39px,
+          rgba(255, 255, 255, 0.02) 40px
+        );
+      opacity: 0.28;
+    }
+
+    .page {
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 32px 20px 48px;
+      padding: 42px 20px 72px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero {
-      margin-bottom: 20px;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--panel-alt);
-      color: var(--accent-strong);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      padding-top: 42px;
+      text-align: center;
     }
 
     h1 {
-      margin: 14px 0 8px;
-      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin: 0;
+      font-size: clamp(3.8rem, 11vw, 7.8rem);
       line-height: 0.95;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.07em;
+      font-style: italic;
+      font-weight: 900;
+      background: linear-gradient(180deg, #dbf0ff 0%, #93ccff 52%, #2d82bf 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 16px 60px rgba(51, 136, 204, 0.2);
     }
 
     .subtext {
       max-width: 720px;
-      margin: 0;
+      margin: 18px auto 0;
       color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.55;
+      font-size: clamp(1rem, 2.1vw, 1.34rem);
+      line-height: 1.6;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-      gap: 20px;
-      align-items: start;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid rgba(213, 223, 209, 0.9);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
+    .input-shell {
+      max-width: 900px;
+      margin: 34px auto 0;
+      border-radius: 30px;
       overflow: hidden;
-    }
-
-    .panel-inner {
-      padding: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      background:
+        linear-gradient(180deg, rgba(11, 22, 36, 0.72), rgba(6, 12, 20, 0.96)),
+        var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      position: relative;
     }
 
     textarea {
       width: 100%;
-      min-height: 460px;
+      min-height: 260px;
       resize: vertical;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: #fbfcfa;
+      padding: 28px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
       color: var(--text);
-      font: 14px/1.45 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font: 15px/1.6 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       outline: none;
-      transition: border-color 120ms ease, box-shadow 120ms ease;
+      transition: background 120ms ease;
     }
 
     textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(47, 111, 79, 0.12);
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    textarea::placeholder {
+      color: rgba(173, 194, 216, 0.52);
+    }
+
+    .input-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px 20px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .actions {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      margin-top: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     button {
-      border: 0;
+      border: 1px solid transparent;
       border-radius: 999px;
       padding: 12px 18px;
       font: inherit;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease, border-color 120ms ease;
     }
 
     button:hover {
@@ -140,99 +159,106 @@
     }
 
     button.primary {
-      background: var(--accent);
+      background: linear-gradient(180deg, #409fdd 0%, #2a78b4 100%);
       color: white;
+      box-shadow: 0 10px 26px rgba(46, 129, 189, 0.28);
     }
 
     button.secondary {
-      background: var(--panel-alt);
-      color: var(--accent-strong);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--line);
+      color: var(--text);
     }
 
     button.ghost {
       background: transparent;
       color: var(--muted);
-      border: 1px solid var(--line);
+      border-color: var(--line);
     }
 
-    .note {
-      margin-top: 12px;
+    .helper {
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.94rem;
       line-height: 1.5;
+      text-align: left;
     }
 
-    .score-card {
-      padding: 24px 20px 20px;
-      border-bottom: 1px solid var(--line);
+    .results-shell {
+      --result-color: var(--good);
+      max-width: 980px;
+      margin: 28px auto 0;
+      padding: 28px;
+      border-radius: 30px;
       background:
-        linear-gradient(160deg, rgba(47, 111, 79, 0.08), rgba(255, 255, 255, 0)),
-        var(--panel);
-    }
-
-    .score-ring {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
+        linear-gradient(180deg, rgba(12, 20, 32, 0.84), rgba(7, 13, 21, 0.98)),
+        var(--panel-strong);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
       display: grid;
-      place-items: center;
-      background:
-        radial-gradient(closest-side, white 76%, transparent 77% 100%),
-        conic-gradient(var(--ring-color, var(--good)) calc(var(--score, 0) * 1%), #dbe5d7 0);
-      box-shadow: inset 0 0 0 1px rgba(213, 223, 209, 0.8);
+      gap: 18px;
+      animation: fade-up 220ms ease;
     }
 
-    .score-ring-inner {
-      text-align: center;
+    .results-shell[hidden] {
+      display: none;
+    }
+
+    .result-top {
+      display: grid;
+      grid-template-columns: minmax(180px, 230px) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .score-block {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    .score-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .score-value {
-      font-size: 2.6rem;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.06em;
+      margin-top: 12px;
+      font-size: clamp(3.2rem, 8vw, 5rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      color: var(--result-color);
+      text-shadow: 0 10px 34px rgba(47, 129, 189, 0.22);
     }
 
-    .score-label {
-      margin-top: 6px;
-      font-size: 0.86rem;
+    .score-scale {
+      margin-top: 8px;
+      font-size: 0.92rem;
       font-weight: 700;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
 
     .verdict {
-      text-align: center;
-      font-size: 1.15rem;
+      font-size: clamp(1.45rem, 3vw, 2.3rem);
       font-weight: 800;
       letter-spacing: -0.02em;
     }
 
     .explanation {
-      margin-top: 8px;
-      text-align: center;
+      margin-top: 10px;
       color: var(--muted);
       line-height: 1.5;
-      font-size: 0.96rem;
+      font-size: 1rem;
     }
 
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      padding: 16px 20px 0;
-    }
-
-    .quick-card {
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: #fbfcfa;
-    }
-
-    .panel-kicker {
+    .section-kicker {
       font-size: 0.8rem;
       font-weight: 800;
       color: var(--accent-strong);
@@ -240,20 +266,28 @@
       text-transform: uppercase;
     }
 
+    .action-box {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
     .reason-list {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 8px;
-      margin-top: 10px;
     }
 
     .reason-item {
-      padding: 10px 12px;
-      border-radius: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
       background: var(--danger-soft);
-      color: var(--text);
+      color: #ffd7dc;
       line-height: 1.45;
       font-size: 0.92rem;
-      border: 1px solid rgba(164, 60, 46, 0.16);
+      border: 1px solid rgba(255, 141, 154, 0.14);
     }
 
     .action-text {
@@ -263,22 +297,36 @@
       font-size: 0.94rem;
     }
 
-    .checks {
-      padding: 16px 20px 20px;
+    .details-block {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+      overflow: hidden;
     }
 
-    .checks + .checks {
-      border-top: 1px solid var(--line);
+    .details-block summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 700;
+      color: var(--text);
     }
 
-    .checks h2 {
-      margin: 0 0 12px;
-      font-size: 1rem;
+    .details-block summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-block[open] summary {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .details-body {
+      padding: 16px 18px 18px;
     }
 
     .value-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
     }
 
@@ -286,7 +334,7 @@
       padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid var(--line);
-      background: #fbfcfa;
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .value-label {
@@ -315,16 +363,16 @@
       padding: 12px 14px;
       border-radius: 16px;
       border: 1px solid var(--line);
-      background: #fbfcfa;
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .check-item.risk {
-      border-color: rgba(164, 60, 46, 0.18);
+      border-color: rgba(255, 141, 154, 0.14);
       background: var(--danger-soft);
     }
 
     .check-item.safe {
-      border-color: rgba(47, 111, 79, 0.2);
+      border-color: rgba(116, 211, 160, 0.16);
       background: var(--good-soft);
     }
 
@@ -358,126 +406,137 @@
       line-height: 1.6;
     }
 
-    .shortcut-note {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-    .guide {
+    .hero-note {
       margin-top: 16px;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: #fbfcfa;
-    }
-
-    .guide h2 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .guide-list {
-      display: grid;
-      gap: 8px;
       color: var(--muted);
       font-size: 0.92rem;
       line-height: 1.5;
     }
 
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     @media (max-width: 860px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
       textarea {
-        min-height: 340px;
+        min-height: 220px;
+        padding: 22px;
       }
 
-      .quick-grid,
+      .input-footer,
+      .result-top,
       .value-grid {
         grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .input-footer {
+        justify-items: stretch;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 24px 14px 48px;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .results-shell {
+        padding: 20px;
+      }
+
+      .value-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <main class="page">
     <section class="hero">
-      <span class="eyebrow">Header Risk Checker</span>
       <h1>Is this sketchy?</h1>
       <p class="subtext">
-        Paste a raw email header and this page will score how sketchy it looks using common checks like SPF, DKIM, DMARC, domain mismatches, routing oddities, and spam flags.
-        Everything runs in your browser only.
+        Paste a full email header and get a fast sketchiness score, the main reasons it looks off, and a plain-English next step.
+      </p>
+      <div class="input-shell">
+          <textarea id="headerInput" placeholder="From: ...&#10;Return-Path: ...&#10;Authentication-Results: ...&#10;Received: ..."></textarea>
+          <div class="input-footer">
+            <div class="helper">
+              Runs only in your browser. Pasting auto-checks. You can also press Ctrl+Enter or Cmd+Enter.
+            </div>
+            <div class="actions">
+              <button class="ghost" id="clearButton" type="button">Clear</button>
+              <button class="secondary" id="sampleButton" type="button">Try Sample</button>
+              <button class="primary" id="analyzeButton" type="button">Check Header</button>
+            </div>
+          </div>
+      </div>
+      <p class="hero-note">
+        This is a heuristic checker, not a forensic verdict. Low risk does not guarantee safety.
       </p>
     </section>
 
-    <div class="grid">
-      <section class="panel">
-        <div class="panel-inner">
-          <label for="headerInput">Paste full email header</label>
-          <textarea id="headerInput" placeholder="From: ...&#10;Return-Path: ...&#10;Authentication-Results: ...&#10;Received: ..."></textarea>
-          <div class="actions">
-            <button class="primary" id="analyzeButton" type="button">Analyze Header</button>
-            <button class="secondary" id="sampleButton" type="button">Load Sample</button>
-            <button class="ghost" id="clearButton" type="button">Clear</button>
-          </div>
-          <p class="note">
-            This is a simple heuristic tool, not a forensic verdict. A low score does not guarantee safety, and a high score does not prove malicious intent.
-          </p>
-          <p class="shortcut-note">
-            Tip: pasting auto-runs the analysis. You can also press Ctrl+Enter or Cmd+Enter.
-          </p>
-          <div class="guide">
-            <h2>How to get full headers</h2>
-            <div class="guide-list">
-              <div><strong>Gmail:</strong> open the message, choose More, then Show original.</div>
-              <div><strong>Outlook desktop:</strong> open the message, go to File, then Properties, and copy Internet headers.</div>
-              <div><strong>Outlook on the web / Microsoft 365:</strong> open the message, choose More actions, then View, then View message details.</div>
-            </div>
-          </div>
+    <section class="results-shell" id="resultsSection" hidden>
+      <div class="result-top">
+        <div class="score-block">
+          <div class="score-kicker">Sketchiness Score</div>
+          <div class="score-value" id="scoreValue">0</div>
+          <div class="score-scale">out of 100</div>
         </div>
-      </section>
-
-      <aside class="panel">
-        <div class="score-card">
-          <div class="score-ring" id="scoreRing" style="--score: 0; --ring-color: var(--good);">
-            <div class="score-ring-inner">
-              <div class="score-value" id="scoreValue">0</div>
-              <div class="score-label">Sketchiness</div>
-            </div>
-          </div>
+        <div>
           <div class="verdict" id="verdict">Waiting for analysis</div>
           <div class="explanation" id="summary">Paste a header on the left and run the check.</div>
-        </div>
-        <div class="quick-grid">
-          <div class="quick-card">
-            <div class="panel-kicker">Main Reasons</div>
-            <div class="reason-list" id="topReasons">
-              <div class="empty">No risk reasons yet.</div>
-            </div>
-          </div>
-          <div class="quick-card">
-            <div class="panel-kicker">What To Do</div>
+          <div class="action-box">
+            <div class="section-kicker">What To Do</div>
             <div class="action-text" id="actionText">Paste a header to get a recommended next step.</div>
           </div>
         </div>
-        <div class="checks">
-          <h2>Extracted Values</h2>
+      </div>
+
+      <div>
+        <div class="section-kicker">Main Reasons</div>
+        <div class="reason-list" id="topReasons">
+          <div class="empty">No risk reasons yet.</div>
+        </div>
+      </div>
+
+      <details class="details-block">
+        <summary>Header Values</summary>
+        <div class="details-body">
           <div class="value-grid" id="valueGrid">
             <div class="empty">No values extracted yet.</div>
           </div>
         </div>
-        <div class="checks">
-          <h2>Checks</h2>
+      </details>
+
+      <details class="details-block">
+        <summary>All Checks</summary>
+        <div class="details-body">
           <div class="check-list" id="checkList">
             <div class="empty">No checks run yet.</div>
           </div>
         </div>
-      </aside>
-    </div>
-  </div>
+      </details>
+    </section>
+  </main>
 
   <script>
     const sampleHeader = `Return-Path: <alerts-security@mailer-login-check.net>
@@ -531,7 +590,7 @@ X-Spam-Flag: YES`;
     const analyzeButton = document.getElementById("analyzeButton");
     const sampleButton = document.getElementById("sampleButton");
     const clearButton = document.getElementById("clearButton");
-    const scoreRing = document.getElementById("scoreRing");
+    const resultsSection = document.getElementById("resultsSection");
     const scoreValue = document.getElementById("scoreValue");
     const verdict = document.getElementById("verdict");
     const summary = document.getElementById("summary");
@@ -948,12 +1007,18 @@ X-Spam-Flag: YES`;
     }
 
     function renderResult(result) {
+      const hasResult = Boolean(result.checks && result.checks.length);
+      resultsSection.hidden = !hasResult;
+
+      if (!hasResult) {
+        return;
+      }
+
       scoreValue.textContent = result.score;
       verdict.textContent = result.verdict;
       summary.textContent = result.summary;
       actionText.textContent = result.action || "";
-      scoreRing.style.setProperty("--score", result.score);
-      scoreRing.style.setProperty("--ring-color", result.ringColor || "var(--good)");
+      resultsSection.style.setProperty("--result-color", result.ringColor || "var(--good)");
       renderReasons(result.topReasons || []);
       renderValues(result.extractedValues || []);
       renderChecks(result.checks);
