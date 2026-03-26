@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is this sketchy?</title>
+  <style>
+    :root {
+      --bg: #f4f7f2;
+      --panel: #ffffff;
+      --panel-alt: #eef3e8;
+      --text: #1f2a1f;
+      --muted: #5f6d5f;
+      --line: #d5dfd1;
+      --accent: #2f6f4f;
+      --accent-strong: #204d37;
+      --warning: #b06a00;
+      --danger: #a43c2e;
+      --danger-soft: #f7dfda;
+      --good: #2f6f4f;
+      --good-soft: #dff0e5;
+      --shadow: 0 18px 42px rgba(31, 42, 31, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47, 111, 79, 0.08), transparent 32%),
+        linear-gradient(180deg, #f7faf5 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .hero {
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--panel-alt);
+      color: var(--accent-strong);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .subtext {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(213, 223, 209, 0.9);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-inner {
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 460px;
+      resize: vertical;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfcfa;
+      color: var(--text);
+      font: 14px/1.45 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      outline: none;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(47, 111, 79, 0.12);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    button.secondary {
+      background: var(--panel-alt);
+      color: var(--accent-strong);
+    }
+
+    button.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .score-card {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(160deg, rgba(47, 111, 79, 0.08), rgba(255, 255, 255, 0)),
+        var(--panel);
+    }
+
+    .score-ring {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(closest-side, white 76%, transparent 77% 100%),
+        conic-gradient(var(--ring-color, var(--good)) calc(var(--score, 0) * 1%), #dbe5d7 0);
+      box-shadow: inset 0 0 0 1px rgba(213, 223, 209, 0.8);
+    }
+
+    .score-ring-inner {
+      text-align: center;
+    }
+
+    .score-value {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .score-label {
+      margin-top: 6px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .verdict {
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .explanation {
+      margin-top: 8px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.96rem;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px 20px 0;
+    }
+
+    .quick-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfcfa;
+    }
+
+    .panel-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--accent-strong);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .reason-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .reason-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--danger-soft);
+      color: var(--text);
+      line-height: 1.45;
+      font-size: 0.92rem;
+      border: 1px solid rgba(164, 60, 46, 0.16);
+    }
+
+    .action-text {
+      margin-top: 10px;
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .checks {
+      padding: 16px 20px 20px;
+    }
+
+    .checks + .checks {
+      border-top: 1px solid var(--line);
+    }
+
+    .checks h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .value-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .value-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .value-value {
+      margin-top: 6px;
+      color: var(--text);
+      font-size: 0.93rem;
+      font-weight: 700;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .check-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .check-item.risk {
+      border-color: rgba(164, 60, 46, 0.18);
+      background: var(--danger-soft);
+    }
+
+    .check-item.safe {
+      border-color: rgba(47, 111, 79, 0.2);
+      background: var(--good-soft);
+    }
+
+    .check-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .check-title {
+      font-weight: 700;
+    }
+
+    .check-points {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .check-detail {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .shortcut-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .guide {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .guide h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      textarea {
+        min-height: 340px;
+      }
+
+      .quick-grid,
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <span class="eyebrow">Header Risk Checker</span>
+      <h1>Is this sketchy?</h1>
+      <p class="subtext">
+        Paste a raw email header and this page will score how sketchy it looks using common checks like SPF, DKIM, DMARC, domain mismatches, routing oddities, and spam flags.
+        Everything runs in your browser only.
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-inner">
+          <label for="headerInput">Paste full email header</label>
+          <textarea id="headerInput" placeholder="From: ...&#10;Return-Path: ...&#10;Authentication-Results: ...&#10;Received: ..."></textarea>
+          <div class="actions">
+            <button class="primary" id="analyzeButton" type="button">Analyze Header</button>
+            <button class="secondary" id="sampleButton" type="button">Load Sample</button>
+            <button class="ghost" id="clearButton" type="button">Clear</button>
+          </div>
+          <p class="note">
+            This is a simple heuristic tool, not a forensic verdict. A low score does not guarantee safety, and a high score does not prove malicious intent.
+          </p>
+          <p class="shortcut-note">
+            Tip: pasting auto-runs the analysis. You can also press Ctrl+Enter or Cmd+Enter.
+          </p>
+          <div class="guide">
+            <h2>How to get full headers</h2>
+            <div class="guide-list">
+              <div><strong>Gmail:</strong> open the message, choose More, then Show original.</div>
+              <div><strong>Outlook desktop:</strong> open the message, go to File, then Properties, and copy Internet headers.</div>
+              <div><strong>Outlook on the web / Microsoft 365:</strong> open the message, choose More actions, then View, then View message details.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="score-card">
+          <div class="score-ring" id="scoreRing" style="--score: 0; --ring-color: var(--good);">
+            <div class="score-ring-inner">
+              <div class="score-value" id="scoreValue">0</div>
+              <div class="score-label">Sketchiness</div>
+            </div>
+          </div>
+          <div class="verdict" id="verdict">Waiting for analysis</div>
+          <div class="explanation" id="summary">Paste a header on the left and run the check.</div>
+        </div>
+        <div class="quick-grid">
+          <div class="quick-card">
+            <div class="panel-kicker">Main Reasons</div>
+            <div class="reason-list" id="topReasons">
+              <div class="empty">No risk reasons yet.</div>
+            </div>
+          </div>
+          <div class="quick-card">
+            <div class="panel-kicker">What To Do</div>
+            <div class="action-text" id="actionText">Paste a header to get a recommended next step.</div>
+          </div>
+        </div>
+        <div class="checks">
+          <h2>Extracted Values</h2>
+          <div class="value-grid" id="valueGrid">
+            <div class="empty">No values extracted yet.</div>
+          </div>
+        </div>
+        <div class="checks">
+          <h2>Checks</h2>
+          <div class="check-list" id="checkList">
+            <div class="empty">No checks run yet.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const sampleHeader = `Return-Path: <alerts-security@mailer-login-check.net>
+Received: from smtp.mailer-login-check.net (198.51.100.8)
+    by mx.example.org with ESMTPS id abc123
+    for <user@example.org>; Tue, 26 Mar 2026 10:14:22 -0400
+Received-SPF: fail (example.org: domain of mailer-login-check.net does not designate 198.51.100.8 as permitted sender) client-ip=198.51.100.8;
+Authentication-Results: mx.example.org;
+    spf=fail smtp.mailfrom=mailer-login-check.net;
+    dkim=none (message not signed);
+    dmarc=fail action=quarantine header.from=contoso.com
+From: "Contoso Billing" <support@contoso-payments.net>
+Reply-To: "Contoso Billing" <cases@secure-payments-help.net>
+To: user@example.org
+Subject: URGENT: Verify your payroll details today
+Date: Tue, 26 Mar 2026 10:13:59 -0400
+Message-ID: <A1B2C3D4@mail-verify-alert.net>
+X-Spam-Flag: YES`;
+
+    const freeMailDomains = [
+      "gmail.com",
+      "outlook.com",
+      "hotmail.com",
+      "yahoo.com",
+      "icloud.com",
+      "aol.com",
+      "proton.me",
+      "protonmail.com"
+    ];
+
+    const multiPartSuffixes = new Set([
+      "co.uk",
+      "org.uk",
+      "gov.uk",
+      "ac.uk",
+      "co.jp",
+      "com.au",
+      "net.au",
+      "org.au",
+      "co.nz",
+      "com.br",
+      "com.mx",
+      "co.in",
+      "firm.in",
+      "net.in",
+      "org.in",
+      "gc.ca"
+    ]);
+
+    const headerInput = document.getElementById("headerInput");
+    const analyzeButton = document.getElementById("analyzeButton");
+    const sampleButton = document.getElementById("sampleButton");
+    const clearButton = document.getElementById("clearButton");
+    const scoreRing = document.getElementById("scoreRing");
+    const scoreValue = document.getElementById("scoreValue");
+    const verdict = document.getElementById("verdict");
+    const summary = document.getElementById("summary");
+    const topReasons = document.getElementById("topReasons");
+    const actionText = document.getElementById("actionText");
+    const valueGrid = document.getElementById("valueGrid");
+    const checkList = document.getElementById("checkList");
+
+    function normalizeHeaders(raw) {
+      return raw
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .split("\n")
+        .reduce((lines, line) => {
+          if (/^[ \t]/.test(line) && lines.length) {
+            lines[lines.length - 1] += " " + line.trim();
+          } else {
+            lines.push(line);
+          }
+          return lines;
+        }, []);
+    }
+
+    function parseHeaders(raw) {
+      const lines = normalizeHeaders(raw);
+      const map = new Map();
+
+      for (const line of lines) {
+        const idx = line.indexOf(":");
+        if (idx === -1) {
+          continue;
+        }
+
+        const name = line.slice(0, idx).trim().toLowerCase();
+        const value = line.slice(idx + 1).trim();
+
+        if (!map.has(name)) {
+          map.set(name, []);
+        }
+
+        map.get(name).push(value);
+      }
+
+      return map;
+    }
+
+    function getHeader(headers, name) {
+      return headers.get(name.toLowerCase()) || [];
+    }
+
+    function firstHeader(headers, name) {
+      return getHeader(headers, name)[0] || "";
+    }
+
+    function extractEmailAddress(value) {
+      if (!value) {
+        return "";
+      }
+
+      const angleMatch = value.match(/<([^<>@\s]+@[^<>@\s]+)>/);
+      if (angleMatch) {
+        return angleMatch[1].toLowerCase();
+      }
+
+      const plainMatch = value.match(/\b([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})\b/i);
+      return plainMatch ? plainMatch[1].toLowerCase() : "";
+    }
+
+    function extractDomainFromEmail(value) {
+      const email = extractEmailAddress(value);
+      if (!email.includes("@")) {
+        return "";
+      }
+      return email.split("@").pop();
+    }
+
+    function extractMessageIdDomain(value) {
+      if (!value) {
+        return "";
+      }
+
+      const match = value.match(/@([A-Z0-9.-]+\.[A-Z]{2,})/i);
+      return match ? match[1].toLowerCase() : "";
+    }
+
+    function getOrganizationalDomain(domain) {
+      if (!domain) {
+        return "";
+      }
+
+      const cleaned = domain.toLowerCase().replace(/\.+$/, "");
+
+      if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(cleaned)) {
+        return cleaned;
+      }
+
+      const parts = cleaned.split(".").filter(Boolean);
+      if (parts.length <= 2) {
+        return cleaned;
+      }
+
+      const lastTwo = parts.slice(-2).join(".");
+      return multiPartSuffixes.has(lastTwo) ? parts.slice(-3).join(".") : lastTwo;
+    }
+
+    function domainsAlign(left, right) {
+      const leftOrg = getOrganizationalDomain(left);
+      const rightOrg = getOrganizationalDomain(right);
+      return Boolean(leftOrg && rightOrg && leftOrg === rightOrg);
+    }
+
+    function readAuthenticationResult(values, label) {
+      if (!values.length) {
+        return "";
+      }
+
+      const source = values.join(" ; ");
+      const regex = new RegExp("(?:^|[;\\s])" + label + "\\s*=\\s*(pass|fail|softfail|none|neutral|temperror|permerror)\\b", "i");
+      const match = source.match(regex);
+      return match ? match[1].toLowerCase() : "";
+    }
+
+    function readReceivedSpf(values) {
+      for (const value of values) {
+        const trimmed = value.trim();
+        const match = trimmed.match(/^(pass|fail|softfail|none|neutral|temperror|permerror)\b/i) ||
+          trimmed.match(/\b(pass|fail|softfail|none|neutral|temperror|permerror)\b/i);
+
+        if (match) {
+          return match[1].toLowerCase();
+        }
+      }
+
+      return "";
+    }
+
+    function isPass(result) {
+      return result === "pass";
+    }
+
+    function isHardFail(result) {
+      return result === "fail" || result === "permerror";
+    }
+
+    function isWeak(result) {
+      return result === "softfail" || result === "neutral" || result === "temperror";
+    }
+
+    function isMissing(result) {
+      return !result || result === "none";
+    }
+
+    function addCheck(checks, title, points, detail) {
+      checks.push({ title, points, detail });
+    }
+
+    function recommendedAction(score) {
+      if (score >= 75) {
+        return "Do not reply, click links, or open attachments. Verify the sender through a trusted phone number or website, then forward the message to IT or your security contact.";
+      }
+
+      if (score >= 50) {
+        return "Treat this as suspicious. Verify the sender out of band before responding, and send it to IT or your security contact if this is a work account.";
+      }
+
+      if (score >= 25) {
+        return "Pause before acting. Double-check the sender, compare links carefully, and confirm unexpected requests through a trusted channel.";
+      }
+
+      return "No major header red flags were found here, but still verify unusual requests through a known contact method before taking action.";
+    }
+
+    function analyzeHeader(raw) {
+      const trimmed = raw.trim();
+
+      if (!trimmed) {
+        return {
+          score: 0,
+          verdict: "Waiting for analysis",
+          summary: "Paste a header on the left and run the check.",
+          action: "Paste a header to get a recommended next step.",
+          topReasons: [],
+          extractedValues: [],
+          checks: [],
+          ringColor: "var(--good)"
+        };
+      }
+
+      const headers = parseHeaders(trimmed);
+      const checks = [];
+
+      const fromValue = firstHeader(headers, "from");
+      const fromDomain = extractDomainFromEmail(fromValue);
+      const returnPathDomain = extractDomainFromEmail(firstHeader(headers, "return-path"));
+      const replyToDomain = extractDomainFromEmail(firstHeader(headers, "reply-to"));
+      const messageIdDomain = extractMessageIdDomain(firstHeader(headers, "message-id"));
+      const subject = firstHeader(headers, "subject");
+      const dateHeader = firstHeader(headers, "date");
+      const receivedCount = getHeader(headers, "received").length;
+      const authHeaders = getHeader(headers, "authentication-results");
+      const spfResult = readAuthenticationResult(authHeaders, "spf") || readReceivedSpf(getHeader(headers, "received-spf"));
+      const dkimResult = readAuthenticationResult(authHeaders, "dkim");
+      const dmarcResult = readAuthenticationResult(authHeaders, "dmarc");
+      const responseDomain = replyToDomain || returnPathDomain;
+      const strongAuthPass = isPass(dmarcResult) && (isPass(spfResult) || isPass(dkimResult));
+      const collapsedAuth = !isPass(spfResult) && !isPass(dkimResult) && !isPass(dmarcResult) &&
+        !isMissing(spfResult) && !isMissing(dmarcResult);
+
+      if (isHardFail(spfResult)) {
+        addCheck(checks, "SPF failed", 18, "The sending IP was not authorized for the claimed sending domain.");
+      } else if (isWeak(spfResult)) {
+        addCheck(checks, "SPF is weak or inconclusive", 10, "SPF did not pass cleanly, which reduces trust in the sender path.");
+      } else if (isMissing(spfResult)) {
+        addCheck(checks, "SPF missing", 6, "No clear SPF result was found in the header.");
+      } else {
+        addCheck(checks, "SPF passed", 0, "SPF passed for the sending domain.");
+      }
+
+      if (isHardFail(dkimResult)) {
+        addCheck(checks, "DKIM failed", 16, "The message signature failed verification.");
+      } else if (isMissing(dkimResult)) {
+        addCheck(checks, "DKIM missing", 8, "No valid DKIM result was found, so the header lacks a strong signature signal.");
+      } else if (dkimResult === "temperror") {
+        addCheck(checks, "DKIM temporary error", 10, "A DKIM signature was present but could not be checked cleanly.");
+      } else {
+        addCheck(checks, "DKIM passed", 0, "DKIM passed.");
+      }
+
+      if (isHardFail(dmarcResult)) {
+        addCheck(
+          checks,
+          "DMARC failed",
+          collapsedAuth ? 24 : 18,
+          collapsedAuth
+            ? "DMARC failed and neither SPF nor DKIM produced a clean pass, which is a strong spoofing signal."
+            : "The visible From domain did not align with authentication as expected."
+        );
+      } else if (isMissing(dmarcResult)) {
+        addCheck(checks, "DMARC missing", 8, "No clear DMARC result was found.");
+      } else if (dmarcResult === "temperror") {
+        addCheck(checks, "DMARC temporary error", 10, "DMARC could not be fully evaluated.");
+      } else {
+        addCheck(checks, "DMARC passed", 0, "DMARC passed.");
+      }
+
+      if (fromDomain && returnPathDomain && !domainsAlign(fromDomain, returnPathDomain)) {
+        addCheck(
+          checks,
+          "From and Return-Path do not align",
+          strongAuthPass ? 4 : 10,
+          `Visible sender uses ${fromDomain}, while Return-Path uses ${returnPathDomain}.`
+        );
+      } else if (fromDomain && returnPathDomain) {
+        addCheck(checks, "From and Return-Path align", 0, "The visible sender and bounce address appear to belong to the same organization.");
+      } else {
+        addCheck(checks, "Return-Path alignment unclear", strongAuthPass ? 1 : 4, "One of the sender domains was missing, so alignment could not be confirmed.");
+      }
+
+      if (fromDomain && replyToDomain && !domainsAlign(fromDomain, replyToDomain)) {
+        addCheck(
+          checks,
+          "Reply-To points elsewhere",
+          strongAuthPass ? 4 : 10,
+          `The visible sender uses ${fromDomain}, but replies go to ${replyToDomain}.`
+        );
+      } else if (replyToDomain) {
+        addCheck(checks, "Reply-To matches sender", 0, "Reply-To appears aligned with the visible sender.");
+      } else {
+        addCheck(checks, "No Reply-To override", 0, "No separate Reply-To was found.");
+      }
+
+      if (!messageIdDomain) {
+        addCheck(checks, "Message-ID missing", strongAuthPass ? 2 : 6, "A normal message usually includes a Message-ID.");
+      } else if (fromDomain && !domainsAlign(fromDomain, messageIdDomain)) {
+        addCheck(checks, "Message-ID domain mismatch", strongAuthPass ? 3 : 7, `Message-ID uses ${messageIdDomain}, not the same organization as ${fromDomain}.`);
+      } else {
+        addCheck(checks, "Message-ID looks aligned", 0, "The Message-ID domain appears to belong to the same organization as the visible sender.");
+      }
+
+      if (receivedCount === 0) {
+        addCheck(checks, "No Received chain", 12, "No routing chain was found, which is unusual for a delivered message.");
+      } else if (receivedCount === 1) {
+        addCheck(checks, "Very short Received chain", 5, "Only one Received line was found, so routing evidence is limited.");
+      } else {
+        addCheck(checks, "Received chain present", 0, `Found ${receivedCount} Received lines.`);
+      }
+
+      if (!dateHeader || Number.isNaN(Date.parse(dateHeader))) {
+        addCheck(checks, "Date header missing or invalid", 6, "The Date field is absent or not parseable.");
+      } else {
+        addCheck(checks, "Date header present", 0, "The Date field exists and looks valid.");
+      }
+
+      if (/(x-spam-flag:\s*yes|x-spam-status:\s*yes|\bscl:\s*[5-9]\b|\bspam confidence level:\s*[5-9]\b)/i.test(trimmed)) {
+        addCheck(checks, "Spam filtering flagged this message", 14, "One of the mail filtering headers indicates elevated spam confidence.");
+      } else {
+        addCheck(checks, "No explicit spam flag found", 0, "No obvious spam flag header was found.");
+      }
+
+      if (subject && /\b(urgent|immediate|verify|suspend|password|invoice|wire|payment|gift card|payroll|action required)\b/i.test(subject)) {
+        addCheck(checks, "Subject uses high-pressure wording", 6, `Subject was: "${subject}"`);
+      } else {
+        addCheck(checks, "Subject wording is not obviously suspicious", 0, "No common phishing urgency language was detected in the subject.");
+      }
+
+      if (fromDomain && freeMailDomains.includes(fromDomain) && responseDomain && !domainsAlign(fromDomain, responseDomain)) {
+        addCheck(checks, "Free-mail sender with different response path", 8, "The visible sender uses a free-mail domain, but the response path points elsewhere.");
+      }
+
+      const sortedChecks = [...checks].sort((left, right) => {
+        if (right.points !== left.points) {
+          return right.points - left.points;
+        }
+
+        return left.title.localeCompare(right.title);
+      });
+      const riskChecks = sortedChecks.filter((check) => check.points > 0);
+      const totalRisk = sortedChecks.reduce((sum, check) => sum + check.points, 0);
+      const score = Math.max(0, Math.min(100, totalRisk));
+      const keyReasons = riskChecks.slice(0, 3).map((check) => check.title);
+
+      let verdictText = "Low risk";
+      let summaryText = "The header does not show many common warning signs.";
+      let ringColor = "var(--good)";
+
+      if (score >= 75) {
+        verdictText = "Very suspicious";
+        summaryText = keyReasons.length ? `Main reasons: ${keyReasons.join(", ")}.` : "Multiple authentication and alignment checks failed. Treat this message as highly untrusted.";
+        ringColor = "var(--danger)";
+      } else if (score >= 50) {
+        verdictText = "High risk";
+        summaryText = keyReasons.length ? `Main reasons: ${keyReasons.join(", ")}.` : "Several strong warning signs were found, including authentication or sender alignment issues.";
+        ringColor = "var(--danger)";
+      } else if (score >= 25) {
+        verdictText = "Moderate risk";
+        summaryText = keyReasons.length ? `Main reasons: ${keyReasons.join(", ")}.` : "Some signals look off. Review the sender path and authentication details carefully.";
+        ringColor = "var(--warning)";
+      }
+
+      return {
+        score,
+        verdict: verdictText,
+        summary: summaryText,
+        action: recommendedAction(score),
+        topReasons: keyReasons,
+        extractedValues: [
+          { label: "From Domain", value: fromDomain || "Not found" },
+          { label: "Return-Path", value: returnPathDomain || "Not found" },
+          { label: "Reply-To", value: replyToDomain || "Not found" },
+          { label: "Message-ID", value: messageIdDomain || "Not found" },
+          { label: "SPF", value: spfResult || "Not found" },
+          { label: "DKIM", value: dkimResult || "Not found" },
+          { label: "DMARC", value: dmarcResult || "Not found" },
+          { label: "Received Hops", value: String(receivedCount) }
+        ],
+        checks: sortedChecks,
+        ringColor
+      };
+    }
+
+    function renderReasons(reasons) {
+      if (!reasons.length) {
+        topReasons.innerHTML = '<div class="empty">No major risk reasons yet.</div>';
+        return;
+      }
+
+      topReasons.innerHTML = reasons.map((reason, index) => `
+        <div class="reason-item">${index + 1}. ${escapeHtml(reason)}</div>
+      `).join("");
+    }
+
+    function renderValues(values) {
+      if (!values.length) {
+        valueGrid.innerHTML = '<div class="empty">No values extracted yet.</div>';
+        return;
+      }
+
+      valueGrid.innerHTML = values.map((item) => `
+        <div class="value-card">
+          <div class="value-label">${escapeHtml(item.label)}</div>
+          <div class="value-value">${escapeHtml(item.value)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderChecks(checks) {
+      if (!checks.length) {
+        checkList.innerHTML = '<div class="empty">No checks run yet.</div>';
+        return;
+      }
+
+      checkList.innerHTML = checks.map((check) => {
+        const stateClass = check.points > 0 ? "risk" : "safe";
+        const pointsLabel = check.points > 0 ? `+${check.points} risk` : "OK";
+
+        return `
+          <div class="check-item ${stateClass}">
+            <div class="check-head">
+              <div class="check-title">${escapeHtml(check.title)}</div>
+              <div class="check-points">${pointsLabel}</div>
+            </div>
+            <div class="check-detail">${escapeHtml(check.detail)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderResult(result) {
+      scoreValue.textContent = result.score;
+      verdict.textContent = result.verdict;
+      summary.textContent = result.summary;
+      actionText.textContent = result.action || "";
+      scoreRing.style.setProperty("--score", result.score);
+      scoreRing.style.setProperty("--ring-color", result.ringColor || "var(--good)");
+      renderReasons(result.topReasons || []);
+      renderValues(result.extractedValues || []);
+      renderChecks(result.checks);
+    }
+
+    function runAnalysis() {
+      renderResult(analyzeHeader(headerInput.value));
+    }
+
+    analyzeButton.addEventListener("click", runAnalysis);
+
+    sampleButton.addEventListener("click", () => {
+      headerInput.value = sampleHeader;
+      runAnalysis();
+    });
+
+    clearButton.addEventListener("click", () => {
+      headerInput.value = "";
+      renderResult(analyzeHeader(""));
+      headerInput.focus();
+    });
+
+    headerInput.addEventListener("paste", () => {
+      setTimeout(runAnalysis, 0);
+    });
+
+    headerInput.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        runAnalysis();
+      }
+    });
+
+    renderResult(analyzeHeader(""));
+  </script>
+</body>
+</html>
